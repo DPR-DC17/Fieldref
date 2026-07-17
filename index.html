@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FieldRef — MEP Reference Tables</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17191C; --panel:#1F2226; --panel2:#24282D; --line:#33383F;
+  --txt:#E8EAED; --muted:#9AA0A6; --accent:#FFC400; --accent-dim:#8f7008;
+  --ok:#4CD26B; --bad:#FF5C5C; --warn:#FFA340;
+  --mono:'IBM Plex Mono',monospace; --cond:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--body);font-size:15px;line-height:1.45}
+header{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.hazard{height:8px;background:repeating-linear-gradient(-45deg,var(--accent) 0 14px,#1a1a1a 14px 28px)}
+.masthead{display:flex;align-items:baseline;gap:12px;padding:12px 16px 8px}
+.masthead h1{font-family:var(--cond);font-weight:700;font-size:26px;letter-spacing:.06em;text-transform:uppercase}
+.masthead h1 span{color:var(--accent)}
+.masthead .sub{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.08em}
+nav{display:flex;padding:0 12px;gap:4px;overflow-x:auto}
+nav button{appearance:none;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);
+  font-family:var(--cond);font-size:16px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  padding:10px 12px;cursor:pointer;white-space:nowrap}
+nav button.active{color:var(--accent);border-bottom-color:var(--accent)}
+nav button:focus-visible,input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-2px}
+main{max-width:1080px;margin:0 auto;padding:16px 12px 60px}
+.tab{display:none}.tab.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.card h2{font-family:var(--cond);font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--panel2);border-bottom:1px solid var(--line);padding:9px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.card h2 .ref{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.05em;text-transform:none}
+.card .body{padding:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.row.three{grid-template-columns:1fr 1fr 1fr}
+label .lt{display:block;font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+input,select{width:100%;background:#14161A;border:1px solid var(--line);border-radius:4px;color:var(--txt);
+  font-family:var(--mono);font-size:16px;padding:9px 10px;min-height:44px}
+input::placeholder{color:#565b62}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:var(--cond);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:8px 10px;border-bottom:2px solid var(--line);background:var(--panel2)}
+td{font-family:var(--mono);padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.acc{color:var(--accent);font-weight:600}
+td.hl{background:rgba(255,196,0,.08)}
+.scroll{overflow-x:auto}
+.out{background:#101214;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;
+  padding:10px 12px;margin-top:6px;font-family:var(--mono);font-size:14px;min-height:44px}
+.out .line{display:flex;justify-content:space-between;gap:8px;padding:2px 0}
+.out .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;align-self:center}
+.out .v{font-size:16px;font-weight:600;color:var(--accent);text-align:right}
+.out .v.plain{color:var(--txt)}
+.out .empty{color:#565b62;font-size:13px}
+.note{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4}
+.pill{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;border-radius:3px;padding:3px 8px;white-space:nowrap}
+.pill.bad{background:rgba(255,92,92,.15);color:var(--bad)}
+.pill.warn{background:rgba(255,163,64,.15);color:var(--warn)}
+.pill.ok{background:rgba(76,210,107,.15);color:var(--ok)}
+.swatch{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:-2px;margin-right:6px;border:1px solid #444}
+footer{max-width:1080px;margin:0 auto;padding:0 16px 30px;font-size:12px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hazard"></div>
+  <div class="masthead">
+    <h1>Field<span>Ref</span></h1>
+    <div class="sub">MEP REFERENCE TABLES</div>
+  </div>
+  <nav id="nav">
+    <button data-tab="arc" class="active">Arc Flash / PPE</button>
+    <button data-tab="nema">NEMA &amp; Cam-Lok</button>
+    <button data-tab="motor">Motor Data</button>
+    <button data-tab="pt">PT Chart</button>
+    <button data-tab="sensor">Sensors</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ ARC FLASH ============ -->
+<section class="tab active" id="tab-arc">
+<div class="card"><h2>PPE Categories <span class="ref">NFPA 70E Table 130.7(C)(15)(c)</span></h2>
+<div class="scroll"><table>
+<tr><th>Cat</th><th>Min Arc Rating</th><th>Required PPE</th></tr>
+<tr><td class="acc">1</td><td>4 cal/cm²</td><td>AR long-sleeve shirt &amp; pants (or coverall), AR face shield or hood, hard hat, safety glasses, hearing protection, leather gloves*, leather footwear</td></tr>
+<tr><td class="acc">2</td><td>8 cal/cm²</td><td>AR long-sleeve shirt &amp; pants (or coverall), AR flash suit hood or face shield + balaclava, hard hat, safety glasses, hearing protection, leather gloves*, leather footwear</td></tr>
+<tr><td class="acc">3</td><td>25 cal/cm²</td><td>AR flash suit (jacket + pants or coverall), AR flash suit hood, AR gloves*, hard hat, safety glasses, hearing protection, leather footwear</td></tr>
+<tr><td class="acc">4</td><td>40 cal/cm²</td><td>AR flash suit rated ≥40 cal, AR flash suit hood, AR gloves*, hard hat, safety glasses, hearing protection, leather footwear</td></tr>
+</table></div>
+<div class="body"><p class="note">*Rubber insulating gloves with leather protectors satisfy the hand protection requirement where shock protection is also needed. Always use the equipment's arc flash label (incident energy method) when available — it overrides table method categories.</p></div></div>
+
+<div class="card"><h2>Rubber Insulating Glove Classes <span class="ref">ASTM D120</span></h2>
+<div class="scroll"><table>
+<tr><th>Class</th><th>Max Use (AC)</th><th>Proof Test (AC)</th><th>Label Color</th></tr>
+<tr><td class="acc">00</td><td>500 V</td><td>2,500 V</td><td><span class="swatch" style="background:#d9b382"></span>Beige</td></tr>
+<tr><td class="acc">0</td><td>1,000 V</td><td>5,000 V</td><td><span class="swatch" style="background:#d64545"></span>Red</td></tr>
+<tr><td class="acc">1</td><td>7,500 V</td><td>10,000 V</td><td><span class="swatch" style="background:#f5f5f5"></span>White</td></tr>
+<tr><td class="acc">2</td><td>17,000 V</td><td>20,000 V</td><td><span class="swatch" style="background:#e8c93e"></span>Yellow</td></tr>
+<tr><td class="acc">3</td><td>26,500 V</td><td>30,000 V</td><td><span class="swatch" style="background:#3fae5a"></span>Green</td></tr>
+<tr><td class="acc">4</td><td>36,000 V</td><td>40,000 V</td><td><span class="swatch" style="background:#e07b39"></span>Orange</td></tr>
+</table></div>
+<div class="body"><p class="note">Gloves require electrical retest every 6 months (in service). Air-test before each use. Leather protectors required over rubber except limited Class 00/0 exemptions.</p></div></div>
+
+<div class="card"><h2>Approach Boundaries — Quick Reference <span class="ref">NFPA 70E Table 130.4(E)(a)</span></h2>
+<div class="scroll"><table>
+<tr><th>Nominal Voltage</th><th>Limited Approach</th><th>Restricted Approach</th></tr>
+<tr><td>50–150 V</td><td>3 ft 6 in</td><td>Avoid contact</td></tr>
+<tr><td>151–750 V</td><td>3 ft 6 in</td><td>1 ft 0 in</td></tr>
+<tr><td>751 V–15 kV</td><td>5 ft 0 in</td><td>2 ft 2 in</td></tr>
+</table></div>
+<div class="body"><p class="note">Fixed circuit parts, AC systems. Arc flash boundary comes from the equipment label or study — it's independent of these shock boundaries.</p></div></div>
+</section>
+
+<!-- ============ NEMA ============ -->
+<section class="tab" id="tab-nema">
+<div class="card"><h2>Common NEMA Configurations
+  <input id="nemaFilter" placeholder="Filter… (e.g. L21, 480, 50A)" style="max-width:220px;min-height:36px;font-size:13px" oninput="filterNema()"></h2>
+<div class="scroll"><table id="nemaTable">
+<tr><th>Config</th><th>Volts</th><th>Amps</th><th>Poles/Wires</th><th>Typical Use</th></tr>
+</table></div>
+<div class="body"><p class="note">L-prefix = locking (twist-lock). Straight-blade shown without prefix. Wires count includes ground.</p></div></div>
+
+<div class="card"><h2>Cam-Lok Color Code <span class="ref">Series 16 · US standard</span></h2>
+<div class="scroll"><table>
+<tr><th>Color</th><th>Conductor</th><th>Notes</th></tr>
+<tr><td><span class="swatch" style="background:#3fae5a"></span>Green</td><td>Equipment ground</td><td>Connect FIRST, remove LAST</td></tr>
+<tr><td><span class="swatch" style="background:#f5f5f5"></span>White</td><td>Neutral</td><td>Connect second, remove second-to-last</td></tr>
+<tr><td><span class="swatch" style="background:#1a1a1a"></span>Black</td><td>Phase A</td><td rowspan="3">Phases connected last, removed first. Verify rotation before loading.</td></tr>
+<tr><td><span class="swatch" style="background:#d64545"></span>Red</td><td>Phase B</td></tr>
+<tr><td><span class="swatch" style="background:#4169c9"></span>Blue</td><td>Phase C</td></tr>
+</table></div>
+<div class="body"><p class="note">Standard sequence for load bank / temp power hookups: ground → neutral → phases. Reverse order to disconnect. 400A-frame Series 16 Cam-Lok is the typical load bank/genset connector — confirm connectors are rated for the conductor size and never connect/disconnect under load.</p></div></div>
+</section>
+
+<!-- ============ MOTOR DATA ============ -->
+<section class="tab" id="tab-motor">
+<div class="card"><h2>Motor Quick Lookup <span class="ref">NEC 430.250 · NEMA MG-1</span></h2>
+<div class="body">
+  <div class="row three">
+    <label><span class="lt">HP (3Ø)</span><select id="mo-hp" onchange="calcMotorRef()"></select></label>
+    <label><span class="lt">Voltage</span><select id="mo-v" onchange="calcMotorRef()"><option>208</option><option>230</option><option selected>460</option><option>575</option></select></label>
+    <label><span class="lt">Speed (frame)</span><select id="mo-rpm" onchange="calcMotorRef()"><option selected>1800</option><option>3600</option></select></label>
+  </div>
+  <div class="out" id="mo-out"></div>
+  <p class="note">Frame sizes are typical NEMA T-frame for ODP/TEFC general purpose — verify against the actual motor. Starter size per NEMA ICS-2. Conductors at 125% table FLA per NEC 430.22.</p>
+</div></div>
+
+<div class="card"><h2>NEMA Starter Sizes <span class="ref">3Ø max HP</span></h2>
+<div class="scroll"><table>
+<tr><th>Size</th><th>Cont. Amps</th><th>200–230 V</th><th>460–575 V</th></tr>
+<tr><td class="acc">00</td><td>9</td><td>1.5 HP</td><td>2 HP</td></tr>
+<tr><td class="acc">0</td><td>18</td><td>3 HP</td><td>5 HP</td></tr>
+<tr><td class="acc">1</td><td>27</td><td>7.5 HP</td><td>10 HP</td></tr>
+<tr><td class="acc">2</td><td>45</td><td>15 HP</td><td>25 HP</td></tr>
+<tr><td class="acc">3</td><td>90</td><td>30 HP</td><td>50 HP</td></tr>
+<tr><td class="acc">4</td><td>135</td><td>50 HP</td><td>100 HP</td></tr>
+<tr><td class="acc">5</td><td>270</td><td>100 HP</td><td>200 HP</td></tr>
+<tr><td class="acc">6</td><td>540</td><td>200 HP</td><td>400 HP</td></tr>
+</table></div></div>
+</section>
+
+<!-- ============ PT CHART ============ -->
+<section class="tab" id="tab-pt">
+<div class="card"><h2>Pressure-Temperature Lookup</h2>
+<div class="body">
+  <div class="row three">
+    <label><span class="lt">Refrigerant</span><select id="pt-ref" onchange="calcPT();renderPTTable()"><option value="R410A" selected>R-410A</option><option value="R22">R-22</option><option value="R134A">R-134a</option></select></label>
+    <label><span class="lt">Sat. temp (°F)</span><input id="pt-t" inputmode="decimal" placeholder="—" oninput="$('pt-p').value='';calcPT()"></label>
+    <label><span class="lt">or Pressure (psig)</span><input id="pt-p" inputmode="decimal" placeholder="—" oninput="$('pt-t').value='';calcPT()"></label>
+  </div>
+  <div class="out" id="pt-out"><span class="empty">Enter a temp or pressure…</span></div>
+  <p class="note">Interpolated saturation values — verify against your gauge PT scale or the manufacturer's card before charging decisions. Blends with glide not included.</p>
+</div></div>
+<div class="card"><h2>Full Table <span class="ref" id="pt-tbl-ref">R-410A</span></h2>
+<div class="scroll"><table id="ptTable"><tr><th>°F</th><th>psig</th><th>°F</th><th>psig</th></tr></table></div></div>
+</section>
+
+<!-- ============ SENSORS ============ -->
+<section class="tab" id="tab-sensor">
+<div class="card"><h2>Temp Sensor Resistance Lookup <span class="ref">Controls checkout</span></h2>
+<div class="body">
+  <div class="row three">
+    <label><span class="lt">Sensor type</span><select id="sn-type" onchange="calcSensor();renderSnTable()">
+      <option value="pt1000" selected>PT1000 RTD</option>
+      <option value="pt100">PT100 RTD</option>
+      <option value="th10k2">10K Thermistor (Type II)</option>
+      <option value="th10k3">10K Thermistor (Type III)</option>
+      <option value="ni1000">Ni1000 RTD (DIN)</option>
+    </select></label>
+    <label><span class="lt">Temp (°F)</span><input id="sn-t" inputmode="decimal" placeholder="—" oninput="$('sn-r').value='';calcSensor()"></label>
+    <label><span class="lt">or Resistance (Ω)</span><input id="sn-r" inputmode="decimal" placeholder="—" oninput="$('sn-t').value='';calcSensor()"></label>
+  </div>
+  <div class="out" id="sn-out"><span class="empty">Enter a temp or resistance…</span></div>
+  <p class="note">RTDs computed per IEC 60751 (exact). Thermistors use beta-model curve fits (±1–2% typical vs published tables) — good for sanity checks; use the manufacturer curve for calibration. Measure with sensor disconnected from the controller.</p>
+</div></div>
+<div class="card"><h2>Quick Table <span class="ref" id="sn-tbl-ref">PT1000</span></h2>
+<div class="scroll"><table id="snTable"><tr><th>°F</th><th>Ω</th><th>°F</th><th>Ω</th></tr></table></div></div>
+</section>
+
+</main>
+
+<footer>Reference data compiled from NFPA 70E (2024), ASTM D120, NEC 430, NEMA WD-6 / ICS-2, and IEC 60751. Field reference only — the equipment label, study, and manufacturer data always govern. Verify before relying on any value for safety decisions.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(n,d=1)=>n.toLocaleString("en-US",{maximumFractionDigits:d});
+function lines(a){return a.map(([k,v,c])=>`<div class="line"><span class="k">${k}</span><span class="v ${c||""}">${v}</span></div>`).join("")}
+document.getElementById("nav").addEventListener("click",e=>{
+  if(!e.target.dataset.tab)return;
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b===e.target));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.id==="tab-"+e.target.dataset.tab));
+});
+
+/* ============ NEMA ============ */
+const NEMA=[
+["5-15","125","15","2P/3W","Standard household/office receptacle"],
+["5-20","125","20","2P/3W","Commercial 120V circuits, equipment"],
+["6-15","250","15","2P/3W","Small 240V equipment"],
+["6-20","250","20","2P/3W","240V tools, window AC, welders (small)"],
+["6-30","250","30","2P/3W","Compressors, larger 240V loads"],
+["6-50","250","50","2P/3W","Welders, EV charging (legacy)"],
+["14-30","125/250","30","3P/4W","Dryer (4-wire)"],
+["14-50","125/250","50","3P/4W","Range, RV parks, EV charging"],
+["14-60","125/250","60","3P/4W","Large 1Ø equipment"],
+["L5-20","125","20","2P/3W","Locking 120V — portable equipment"],
+["L5-30","125","30","2P/3W","Locking 120V — generators, RV"],
+["L6-20","250","20","2P/3W","Locking 240V — pumps, equipment"],
+["L6-30","250","30","2P/3W","Locking 240V — compressors, heaters"],
+["L14-20","125/250","20","3P/4W","Small generator output"],
+["L14-30","125/250","30","3P/4W","Portable generator output (most common)"],
+["L15-30","3Ø 250","30","3P/4W","3Ø 240V equipment, small load banks"],
+["L16-30","3Ø 480","30","3P/4W","3Ø 480V — load banks, temp power"],
+["L21-30","3ØY 120/208","30","4P/5W","3Ø 208Y — distro boxes, load banks"],
+["L22-30","3ØY 277/480","30","4P/5W","3Ø 480Y — temp power distro"],
+["CS6365","125/250","50","3P/4W","California-style 50A — generators, distro"]];
+function renderNema(rows){
+  $("nemaTable").innerHTML="<tr><th>Config</th><th>Volts</th><th>Amps</th><th>Poles/Wires</th><th>Typical Use</th></tr>"+
+    rows.map(r=>`<tr><td class="acc">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td style="font-family:var(--body)">${r[4]}</td></tr>`).join("");
+}
+function filterNema(){
+  const q=$("nemaFilter").value.toLowerCase().trim();
+  renderNema(q?NEMA.filter(r=>r.join(" ").toLowerCase().includes(q)):NEMA);
+}
+
+/* ============ MOTOR ============ */
+const FLA3={"1":{208:4.6,230:4.2,460:2.1,575:1.7},"1.5":{208:6.6,230:6.0,460:3.0,575:2.4},
+"2":{208:7.5,230:6.8,460:3.4,575:2.7},"3":{208:10.6,230:9.6,460:4.8,575:3.9},
+"5":{208:16.7,230:15.2,460:7.6,575:6.1},"7.5":{208:24.2,230:22,460:11,575:9},
+"10":{208:30.8,230:28,460:14,575:11},"15":{208:46.2,230:42,460:21,575:17},
+"20":{208:59.4,230:54,460:27,575:22},"25":{208:74.8,230:68,460:34,575:27},
+"30":{208:88,230:80,460:40,575:32},"40":{208:114,230:104,460:52,575:41},
+"50":{208:143,230:130,460:65,575:52},"60":{208:169,230:154,460:77,575:62},
+"75":{208:211,230:192,460:96,575:77},"100":{208:273,230:248,460:124,575:99},
+"125":{208:343,230:312,460:156,575:125},"150":{208:396,230:360,460:180,575:144},
+"200":{208:528,230:480,460:240,575:192}};
+const FRAME18={"1":"143T","1.5":"145T","2":"145T","3":"182T","5":"184T","7.5":"213T","10":"215T",
+"15":"254T","20":"256T","25":"284T","30":"286T","40":"324T","50":"326T","60":"364T",
+"75":"365T","100":"405T","125":"444T","150":"445T","200":"445T/447T"};
+const FRAME36={"1":"143T","1.5":"143T","2":"145T","3":"145T/182T","5":"182T","7.5":"184T","10":"213T",
+"15":"215T","20":"254T","25":"256T","30":"284TS","40":"286TS","50":"324TS","60":"326TS",
+"75":"364TS","100":"365TS","125":"404TS","150":"405TS","200":"444TS/445TS"};
+function starterSize(hp,v){
+  const lo=v<=230;
+  const table=lo?[["00",1.5],["0",3],["1",7.5],["2",15],["3",30],["4",50],["5",100],["6",200]]
+               :[["00",2],["0",5],["1",10],["2",25],["3",50],["4",100],["5",200],["6",400]];
+  for(const[s,max]of table)if(hp<=max)return s;
+  return "7+";
+}
+function calcMotorRef(){
+  const hp=$("mo-hp").value,v=parseInt($("mo-v").value),rpm=$("mo-rpm").value;
+  const fla=FLA3[hp][v];
+  const frame=(rpm==="1800"?FRAME18:FRAME36)[hp]||"—";
+  $("mo-out").innerHTML=lines([
+    ["Table FLA",fmt(fla)+" A"],
+    ["Min conductor amps (125%)",fmt(fla*1.25)+" A","plain"],
+    ["Inv-time breaker max (250%)",fmt(fla*2.5,0)+" A","plain"],
+    ["NEMA starter size",starterSize(parseFloat(hp),v)],
+    ["Typical frame ("+rpm+" RPM)",frame,"plain"]]);
+}
+
+/* ============ PT CHART ============ */
+/* Saturation psig at °F (liquid/vapor sat; single-component or near-azeotrope) */
+const PT={
+R410A:[[-20,25.0],[-10,36.1],[0,48.3],[10,62.3],[20,78.3],[30,96.8],[40,118.1],[50,142.2],
+ [60,169.6],[70,200.6],[80,235.4],[90,274.3],[100,317.5],[110,365.4],[120,418.2],[130,476.3],[140,540.1]],
+R22:[[-20,10.2],[-10,16.5],[0,24.0],[10,32.8],[20,43.1],[30,54.9],[40,68.5],[50,84.1],
+ [60,101.6],[70,121.4],[80,143.7],[90,168.4],[100,195.9],[110,226.4],[120,259.9],[130,296.8],[140,337.3]],
+R134A:[[-10,1.8],[0,6.5],[10,11.9],[20,18.4],[30,26.1],[40,35.0],[50,45.4],[60,57.4],
+ [70,71.1],[80,86.7],[90,104.3],[100,124.1],[110,146.3],[120,171.1],[130,198.7],[140,229.2]]};
+function interp(pairs,x,ix,iy){
+  if(x<pairs[0][ix]||x>pairs[pairs.length-1][ix])return null;
+  for(let i=0;i<pairs.length-1;i++){
+    const a=pairs[i],b=pairs[i+1];
+    if(x>=a[ix]&&x<=b[ix])return a[iy]+(b[iy]-a[iy])*(x-a[ix])/(b[ix]-a[ix]);
+  }
+  return null;
+}
+function calcPT(){
+  const ref=$("pt-ref").value,data=PT[ref];
+  const t=parseFloat($("pt-t").value),p=parseFloat($("pt-p").value);
+  let rows=[];
+  if(isFinite(t)){
+    const psig=interp(data,t,0,1);
+    rows=psig==null?[["Out of range",data[0][0]+"–"+data[data.length-1][0]+" °F","plain"]]
+      :[["Sat. pressure",fmt(psig,1)+" psig"],["at",fmt(t,1)+" °F","plain"]];
+  }else if(isFinite(p)){
+    const st=interp(data,p,1,0);
+    rows=st==null?[["Out of range",fmt(data[0][1])+"–"+fmt(data[data.length-1][1])+" psig","plain"]]
+      :[["Sat. temp",fmt(st,1)+" °F"],["at",fmt(p,1)+" psig","plain"]];
+  }else{$("pt-out").innerHTML='<span class="empty">Enter a temp or pressure…</span>';return}
+  $("pt-out").innerHTML=lines(rows);
+}
+function renderPTTable(){
+  const ref=$("pt-ref").value,data=PT[ref];
+  $("pt-tbl-ref").textContent=$("pt-ref").selectedOptions[0].text;
+  const half=Math.ceil(data.length/2);
+  let html="<tr><th>°F</th><th>psig</th><th>°F</th><th>psig</th></tr>";
+  for(let i=0;i<half;i++){
+    const a=data[i],b=data[i+half];
+    html+=`<tr><td>${a[0]}</td><td class="acc">${a[1]}</td><td>${b?b[0]:""}</td><td class="acc">${b?b[1]:""}</td></tr>`;
+  }
+  $("ptTable").innerHTML=html;
+}
+
+/* ============ SENSORS ============ */
+const fToC=f=>(f-32)*5/9, cToF=c=>c*9/5+32;
+/* RTD per IEC 60751 */
+function rtdR(r0,tC){
+  const A=3.9083e-3,B=-5.775e-7;
+  if(tC>=0)return r0*(1+A*tC+B*tC*tC);
+  const C=-4.183e-12;
+  return r0*(1+A*tC+B*tC*tC+C*(tC-100)*tC*tC*tC);
+}
+/* Ni1000 DIN 43760 approx */
+function niR(tC){return 1000*(1+5.485e-3*tC+6.65e-6*tC*tC)}
+/* thermistor beta model, 10k @ 25°C */
+function thR(beta,tC){const T=tC+273.15;return 10000*Math.exp(beta*(1/T-1/298.15))}
+const SN={
+ pt1000:{name:"PT1000",f:t=>rtdR(1000,t)},
+ pt100:{name:"PT100",f:t=>rtdR(100,t)},
+ th10k2:{name:"10K Type II",f:t=>thR(3892,t)},
+ th10k3:{name:"10K Type III",f:t=>thR(3575,t)},
+ ni1000:{name:"Ni1000 DIN",f:t=>niR(t)}};
+function solveTemp(f,targetR){ /* bisection over -40..300°F in °C */
+  let lo=-40,hi=150; /* °C */
+  const decreasing=f(lo)>f(hi);
+  for(let i=0;i<60;i++){
+    const mid=(lo+hi)/2,r=f(mid);
+    if((r>targetR)===decreasing)lo=mid;else hi=mid;
+  }
+  const tC=(lo+hi)/2;
+  if(tC<=-39.9||tC>=149.9)return null;
+  return cToF(tC);
+}
+function calcSensor(){
+  const s=SN[$("sn-type").value];
+  const t=parseFloat($("sn-t").value),r=parseFloat($("sn-r").value);
+  let rows=[];
+  if(isFinite(t)){
+    const ohms=s.f(fToC(t));
+    rows=[["Resistance",fmt(ohms,ohms<2000?1:0)+" Ω"],["at",fmt(t,1)+" °F · "+fmt(fToC(t),1)+" °C","plain"]];
+  }else if(isFinite(r)){
+    const tf=solveTemp(s.f,r);
+    rows=tf==null?[["Out of range","−40 to 300 °F","plain"]]
+      :[["Temperature",fmt(tf,1)+" °F"],["=",fmt(fToC(tf),1)+" °C","plain"]];
+  }else{$("sn-out").innerHTML='<span class="empty">Enter a temp or resistance…</span>';return}
+  $("sn-out").innerHTML=lines(rows);
+}
+function renderSnTable(){
+  const s=SN[$("sn-type").value];
+  $("sn-tbl-ref").textContent=s.name;
+  const temps=[];for(let f=-20;f<=240;f+=10)temps.push(f);
+  const half=Math.ceil(temps.length/2);
+  let html="<tr><th>°F</th><th>Ω</th><th>°F</th><th>Ω</th></tr>";
+  for(let i=0;i<half;i++){
+    const a=temps[i],b=temps[i+half];
+    const ra=s.f(fToC(a)),rb=b!=null?s.f(fToC(b)):null;
+    html+=`<tr><td>${a}</td><td class="acc">${fmt(ra,ra<2000?1:0)}</td><td>${b??""}</td><td class="acc">${rb!=null?fmt(rb,rb<2000?1:0):""}</td></tr>`;
+  }
+  $("snTable").innerHTML=html;
+}
+
+/* ============ INIT ============ */
+renderNema(NEMA);
+$("mo-hp").innerHTML=Object.keys(FLA3).map(h=>`<option>${h}</option>`).join("");
+$("mo-hp").value="10";
+calcMotorRef();
+renderPTTable();
+renderSnTable();
+</script>
+</body>
+</html>
